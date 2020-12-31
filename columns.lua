@@ -738,6 +738,117 @@ local function determine_column_count(elem)
 end
 
 --[[
+# format_colspan_latex(elem, number_columns)
+
+Formatting a colspan in LaTeX
+
+elem (pandoc AST element)
+: `column-span` div to be formatted
+
+number_columns (number)
+: number of columns in the present environment
+
+returns a pandoc RawBlock element in LaTeX format
+
+If the colspan is only one block, turn it into an option
+of the next `multicol` environment. Otherwise insert it 
+between the two `multicol` environment.
+
+**TODO** process one-block colspan into options
+  requires processing headings properly (identifier, link)
+
+]]
+
+--[[
+# header_to_latex_and_inlines(header)
+
+Converts a pandoc Header element to a list of inlines
+for latex output
+
+header (pandoc AST element)
+: a Header element
+
+return a list of inlines
+
+**TODO** check the global environment whether reference links are required?
+
+]]
+local function header_to_latex_and_inlines(header)
+  
+  local latex_header = {
+    'section', 
+    'subsection', 
+    'subsubsection', 
+    'paragraph', 
+    'subparagraph',
+  }
+
+  -- create a list if the header's inlines
+  local inlines = pandoc.List:new(header.content)
+  
+  -- wrap in a latex_header if available 
+  
+  if header.level then
+    if latex_header[header.level] then
+    
+    inlines:insert(1, pandoc.RawInline('latex', 
+        '\\' .. latex_header[header.level] .. '{'))
+    inlines:insert(pandoc.RawInline('latex', '}'))
+    
+    end
+  end
+  
+  -- wrap in a link if available
+  if header.identifier then
+    
+    inlines:insert(1, pandoc.RawInline('latex', 
+        '\\hypertarget{' .. header.identifier .. '}{%\n'))
+    inlines:insert(pandoc.RawInline('latex', 
+        '\\label{' .. header.identifier .. '}}'))
+  
+  end
+  
+  return inlines
+  
+end
+
+local function format_colspan_latex(elem, number_columns)
+  
+    local result = pandoc.List:new()
+    
+    -- does the content consists of a single header?
+    
+    if #elem.content == 1 and elem.content[1].t == 'Header' then
+      
+      -- create a list of inlines
+      inlines = pandoc.List:new()
+      inlines:insert(pandoc.RawInline('latex', 
+        "\\end{multicols}\n"))
+      inlines:insert(pandoc.RawInline('latex', 
+        "\\begin{multicols}{".. number_columns .."}["))
+      inlines:extend(header_to_latex_and_inlines(elem.content[1]))
+--      inlines:extend(elem.content[1].content) -- header inlines
+      inlines:insert(pandoc.RawInline('latex',"]\n"))
+      
+      -- insert as a Plain block
+      result:insert(pandoc.Plain(inlines))
+      
+      return result
+      
+    else
+    
+      result:insert(pandoc.RawBlock('latex', 
+        "\\end{multicols}\n"))
+      result:extend(elem.content)
+      result:insert(pandoc.RawBlock('latex', 
+        "\\begin{multicols}{".. number_columns .."}")) 
+      return result
+    
+    end
+
+end
+
+--[[
 # format_columns_latex(elem)
 
 converts columns into latex markup
@@ -831,14 +942,7 @@ local function format_columns_latex(elem)
       end
       
       if el.classes:includes("column-span-to-be-processed") then
-          
-        local result = pandoc.List:new(el.content)
-        result:insert(1, pandoc.RawBlock('latex', 
-          "\\end{multicols}\n"))
-        result:insert(pandoc.RawBlock('latex', 
-            "\\begin{multicols}{".. number_columns .."}")) 
-        return result
-      
+        return format_colspan_latex(el, number_columns)
       end
             
     end
