@@ -417,11 +417,14 @@ local function process_meta(meta)
   -- in html, ensure that the first element of `columns` div
   -- has a top margin of zero (otherwise we get white space
   -- on the top of the first column)
+  -- idem for the first element after a `column-span` element
   if FORMAT:match('html.*') then
     
     html_header = [[
 <style>
+/* Styles added by the columns.lua pandoc filter */
   .columns :first-child {margin-top: 0;}
+  .column-span + * {margin-top: 0;}
 </style>
 ]]
   
@@ -563,7 +566,7 @@ end
 # consolidate_colattrib_aliases(elem)
 
 Syntactic sugar: unifies various ways of specifying 
-column attributes `column-gap` and `column-rule`. 
+column attributes `column-gap`, `column-rule`. 
 
 elem (pandoc AST element)
 : a `columns` div with attributes
@@ -652,10 +655,6 @@ note: when several `columns` Divs are nested `pandoc` applies the
 ]]
 local function preprocess_columns(elem)
     
-  -- syntactic sugar
-  -- allows different ways of specifying `column-gap` and `column-rule`
-  elem = consolidate_colattrib_aliases(elem)
-
   -- convert any explicit column syntax in a single format:
   -- native Divs with class `columnbreak`
   
@@ -831,18 +830,17 @@ local function format_columns_latex(elem)
         return pandoc.RawBlock('latex', "\\columnbreak\n")
       end
       
-      if el.classes:includes("column-span") or 
-        el.classes:includes("columnspan") then
-        
+      if el.classes:includes("column-span-to-be-processed") then
+          
         local result = pandoc.List:new(el.content)
         result:insert(1, pandoc.RawBlock('latex', 
           "\\end{multicols}\n"))
         result:insert(pandoc.RawBlock('latex', 
             "\\begin{multicols}{".. number_columns .."}")) 
         return result
-        
-      end
       
+      end
+            
     end
 
   }
@@ -911,15 +909,14 @@ local function format_columns_html(elem)
         el = remove_class(el, "columnbreak_already_counted")
         
       -- format column-spans
-      elseif el.classes:includes("column-span") or 
-        el.classes:includes("columnspan") then
+      elseif el.classes:includes("column-span-to-be-processed") then
           
         el = add_to_html_style(el, 'column-span: all')
         
-        -- remove column-span classes to avoid double processing
-        -- when nested
-        el = remove_class(el, "column-span")
-        el = remove_class(el, "columnspan")
+        -- remove column-span-to-be-processed class to avoid double processing
+        -- add column-span class to allow for styling
+        el = add_class(el, "column-span")
+        el = remove_class(el, "column-span-to-be-processed")
       
       end
       
@@ -937,55 +934,6 @@ end
 
 
 -- # Main filters
-
---[[
-# preprocess_filter
-
-preprocessing filters
-
-pick up `columns` Divs for pre-processing
-and process the metadata fields
-
-]]
-preprocess_filter = {
-
-  Div = function (element)
-      
-      -- syntactic sugar
-      -- convert "two-columns" into `columns` Divs
-      for _,class in pairs(element.classes) do
-        
-        -- match xxxcolumns, xxx_columns, xxx-columns
-        -- if xxx is the name of a number, make
-        -- a `columns` div and set its `column-count` attribute
-        local number = number_by_name(
-          string.match(class,'(%a+)[_%-]?columns$')
-          )
-        
-        if number then
-          
-          element = set_attribute(element, 
-              "column-count", tostring(number))
-          element = remove_class(element, class)
-          element = add_class(element, "columns")
-
-        end
-        
-      end
-
-      -- send `columns` Divs to pre-processing
-      if element.classes:includes("columns") then     
-        return preprocess_columns(element)      
-      end
-      
-    end,
-  
-  Meta = function (meta)
-    
-    return process_meta(meta)
-
-  end
-}
 
 --[[
 # format_filter
@@ -1013,18 +961,103 @@ format_filter = {
     
   end    
 }
+--[[
+# preprocess_filter
+
+preprocessing filters
+
+pick up `columns` Divs for pre-processing
+and process the metadata fields
+
+]]
+preprocess_filter = {
+
+  Div = function (element)
+      
+      -- send `columns` Divs to pre-processing
+      if element.classes:includes("columns") then     
+        return preprocess_columns(element)      
+      end
+      
+    end,
+  
+  Meta = function (meta)
+    
+    return process_meta(meta)
+
+  end
+}
+
+--[[
+# syntactic_sugar_filter
+
+provides multiple syntax
+
+]]
+syntactic_sugar_filter = {
+  
+  Div = function(element)
+    
+      -- convert "two-columns" into `columns` Divs
+      for _,class in pairs(element.classes) do
+        
+        -- match xxxcolumns, xxx_columns, xxx-columns
+        -- if xxx is the name of a number, make
+        -- a `columns` div and set its `column-count` attribute
+        local number = number_by_name(
+          string.match(class,'(%a+)[_%-]?columns$')
+          )
+        
+        if number then
+          
+          element = set_attribute(element, 
+              "column-count", tostring(number))
+          element = remove_class(element, class)
+          element = add_class(element, "columns")
+
+        end
+        
+      end
+      
+      -- allows different ways of specifying `columns` attributes
+      if element.classes:includes('columns') then
+        
+        element = consolidate_colattrib_aliases(element)
+      
+      end
+    
+      -- `column-span` syntax
+      -- mark up as "to-be-processed" to avoid
+      --  double processing when nested
+      if element.classes:includes('column-span') or
+        element.classes:includes('columnspan') then
+        
+        element = add_class(element, 'column-span-to-be-processed')
+        element = remove_class(element, 'column-span')
+        element = remove_class(element, 'columnspan')
+      
+      end
+ 
+    return element
+    
+  end
+  
+}
+
 
 -- return filters only if the target format matches
---  the preprocessing filter converts all explicit 
+--  * `syntatic_sugar_filter` deals with multiple syntax
+--  * `preprocessing_filter` converts all explicit 
 --    columnbreaks into a common syntax and tags
 --    those that are already counted. We must do
 --    that for all `columns` environments before
 --    turning any break back into LaTeX `\columnbreak` blocks
 --    otherwise we mess up the count in nested `columns` Divs.
---  We thus post-pone formatting to a second stage when
---    all the counting has been done.
+--  * `format_filter` formats the columns after the counting
+--    has been done
 if format_matches(target_formats) then
-  return {preprocess_filter,
+  return {syntactic_sugar_filter,
+    preprocess_filter,
     format_filter}
 else
   return
