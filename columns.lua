@@ -432,7 +432,8 @@ local function process_meta(meta)
   
   end
 
-
+  return meta
+  
 end
 
 --[[

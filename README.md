@@ -1,3 +1,8 @@
+---
+title: "Columns - Multiple columns support in Pandoc's markdown"
+author: "Julien Dutant"
+---
+
 Columns
 =======
 
