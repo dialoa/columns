@@ -1,0 +1,784 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Columns documentation</title>
+    <link rel="stylesheet" href="ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Tables">Tables</a></li>
+<li><a href="#Local_Functions">Local Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><strong>columns</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>columns</code></h1>
+<p>
+<h1>Columns - multiple column support in Pandoc's markdown.</h1>
+</p>
+<p>This Lua filter provides support for multiple columns in
+latex and html outputs. For details, see README.md.</p>
+    <h3>Info:</h3>
+    <ul>
+        <li><strong>Copyright</strong>: 2021 Julien Dutant</li>
+        <li><strong>Release</strong>: 1.0</li>
+        <li><strong>License</strong>: MIT - see LICENSE file for details.</li>
+        <li><strong>Author</strong>: Julien Dutant <a href="&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#x3a;j&#117;&#x6c;&#105;&#x65;&#110;&#x2e;&#100;&#x75;t&#97;&#x6e;&#116;&#x40;&#107;&#x63;&#108;&#x2e;&#97;&#x63;.&#117;&#x6b;">&#x6a;&#117;&#x6c;&#105;&#x65;&#110;&#x2e;d&#117;&#x74;&#97;&#x6e;&#116;&#x40;&#107;&#x63;l&#46;&#x61;&#99;&#x2e;&#117;&#x6b;</a></li>
+    </ul>
+
+
+<h2><a href="#Tables">Tables</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#format_filter">format_filter</a></td>
+	<td class="summary">Formating filter.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#preprocess_filter">preprocess_filter</a></td>
+	<td class="summary">Preprocessing filter.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#syntactic_sugar_filter">syntactic_sugar_filter</a></td>
+	<td class="summary">Syntactic sugar filter.</td>
+	</tr>
+</table>
+<h2><a href="#Local_Functions">Local Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#format_matches">format_matches (formats)</a></td>
+	<td class="summary">Test whether the target format is in a given list.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#add_header_includes">add_header_includes (meta, block)</a></td>
+	<td class="summary">Add a block to the document's header-includes meta-data field.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#add_class">add_class (element, class)</a></td>
+	<td class="summary">Add a class to an element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#remove_class">remove_class (element, class)</a></td>
+	<td class="summary">Removes a class from an element.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#set_attribute">set_attribute (element, key, value)</a></td>
+	<td class="summary">Set the value of an element's attribute.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#add_to_html_style">add_to_html_style (element, style)</a></td>
+	<td class="summary">Add html style markup to an element's attributes.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#number_by_name">number_by_name (name)</a></td>
+	<td class="summary">Translate an English number name into a number.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#css_values_to_latex">css_values_to_latex (css_str)</a></td>
+	<td class="summary">Convert some CSS values (lengths, colous) to LaTeX equivalents.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ensures_latex_length">ensures_latex_length (text)</a></td>
+	<td class="summary">Ensures that a string specifies a LaTeX length</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#process_meta">process_meta (meta)</a></td>
+	<td class="summary">Process the metadata block.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#convert_explicit_columbreaks">convert_explicit_columbreaks (elem)</a></td>
+	<td class="summary">Convert explicit columnbreaks.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#tag_with_number_of_explicit_columnbreaks">tag_with_number_of_explicit_columnbreaks (elem)</a></td>
+	<td class="summary">Tag an element with the number of explicit columnbreaks it contains.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#consolidate_colattrib_aliases">consolidate_colattrib_aliases (elem)</a></td>
+	<td class="summary">Consolidate aliases for column attributes.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#preprocess_columns">preprocess_columns (elem)</a></td>
+	<td class="summary">Pre-process a Div of class <a href="index.html#">columns</a>.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#determine_column_count">determine_column_count (elem)</a></td>
+	<td class="summary">Determine the number of column in a <a href="index.html#">columns</a> Div.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#header_to_latex_and_inlines">header_to_latex_and_inlines (header)</a></td>
+	<td class="summary">Convert a pandoc Header to a list of inlines for latex output.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#format_colspan_latex">format_colspan_latex (elem, number_columns)</a></td>
+	<td class="summary">Format column span in LaTeX.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#format_columns_latex">format_columns_latex (elem)</a></td>
+	<td class="summary">Format columns for LaTeX output</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#format_columns_html">format_columns_html (elem)</a></td>
+	<td class="summary">Formats columns for html output.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Tables"></a>Tables</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "format_filter"></a>
+    <strong>format_filter</strong>
+    </dt>
+    <dd>
+    Formating filter.
+ Applied last, converts prepared columns in target output formats
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">Div</span>
+         looks for <a href="index.html#">columns</a> class
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "preprocess_filter"></a>
+    <strong>preprocess_filter</strong>
+    </dt>
+    <dd>
+    Preprocessing filter.
+ Processes meta-data fields and walks the document to pre-process
+ columns blocks. Determine how many columns they contain, tags the
+ last column Div, etc. Avoids double-counting when columns environments
+ are nested.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">Div</span>
+         looks for <a href="index.html#">columns</a> class
+        </li>
+        <li><span class="parameter">Meta</span>
+         processes the metadata block
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "syntactic_sugar_filter"></a>
+    <strong>syntactic_sugar_filter</strong>
+    </dt>
+    <dd>
+    Syntactic sugar filter.
+ Provides alternative ways of specifying columns properties.
+ Kept separate from the pre-processing filter for clarity.
+
+
+    <h3>Fields:</h3>
+    <ul>
+        <li><span class="parameter">Div</span>
+         looks for Div of classes <a href="index.html#">columns</a> (and related) and <code>column-span</code>
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+</dl>
+    <h2 class="section-header "><a name="Local_Functions"></a>Local Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "format_matches"></a>
+    <strong>format_matches (formats)</strong>
+    </dt>
+    <dd>
+    Test whether the target format is in a given list.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">formats</span>
+         list of formats to be matched
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        true if match, false otherwise
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "add_header_includes"></a>
+    <strong>add_header_includes (meta, block)</strong>
+    </dt>
+    <dd>
+    Add a block to the document's header-includes meta-data field.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">meta</span>
+         the document's metadata block
+        </li>
+        <li><span class="parameter">block</span>
+         Pandoc block element (e.g. RawBlock or Para) to be added to header-includes
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        meta the modified metadata block
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "add_class"></a>
+    <strong>add_class (element, class)</strong>
+    </dt>
+    <dd>
+    Add a class to an element.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">element</span>
+         Pandoc AST element
+        </li>
+        <li><span class="parameter">class</span>
+         name of the class to be added (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        the modified element, or the unmodified element if the element has no classes
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "remove_class"></a>
+    <strong>remove_class (element, class)</strong>
+    </dt>
+    <dd>
+    Removes a class from an element.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">element</span>
+         Pandoc AST element
+        </li>
+        <li><span class="parameter">class</span>
+         name of the class to be removed (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        the modified element, or the unmodified element if the element has no classes
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "set_attribute"></a>
+    <strong>set_attribute (element, key, value)</strong>
+    </dt>
+    <dd>
+    Set the value of an element's attribute.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">element</span>
+         Pandoc AST element to be modified
+        </li>
+        <li><span class="parameter">key</span>
+         name of the attribute to be set (string)
+        </li>
+        <li><span class="parameter">value</span>
+         value to be set. If nil, the attribute is removed.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        the modified element, or the element if it's not an element with attributes.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "add_to_html_style"></a>
+    <strong>add_to_html_style (element, style)</strong>
+    </dt>
+    <dd>
+    Add html style markup to an element's attributes.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">element</span>
+         the Pandoc AST element to be modified
+        </li>
+        <li><span class="parameter">style</span>
+         the style markup to add (string in CSS)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        the modified element, or the unmodified element if it's an element without attributes
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "number_by_name"></a>
+    <strong>number_by_name (name)</strong>
+    </dt>
+    <dd>
+    Translate an English number name into a number.
+ Converts cardinals ("one") and numerals ("first").
+ Returns nil if the name isn't understood.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">name</span>
+         an English number name (string)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number or nil
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "css_values_to_latex"></a>
+    <strong>css_values_to_latex (css_str)</strong>
+    </dt>
+    <dd>
+    Convert some CSS values (lengths, colous) to LaTeX equivalents.
+ Example usage: <code>css_values_to_latex(&quot;1px solid black&quot;)</code> returns
+ <code>{ length = &quot;1pt&quot;, color = &quot;black&quot;, colour = &quot;black&quot;}</code>.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">css_str</span>
+         a CSS string specifying a value
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        table with keys <code>length</code>, <code>color</code> (alias <code>colour</code>) if found
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ensures_latex_length"></a>
+    <strong>ensures_latex_length (text)</strong>
+    </dt>
+    <dd>
+    Ensures that a string specifies a LaTeX length
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">text</span>
+         text to be checked
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        text if it is a LaTeX length, <code>nil</code> otherwise
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "process_meta"></a>
+    <strong>process_meta (meta)</strong>
+    </dt>
+    <dd>
+    Process the metadata block.
+ Adds any needed material to the document's metadata block.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">meta</span>
+         the document's metadata element
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "convert_explicit_columbreaks"></a>
+    <strong>convert_explicit_columbreaks (elem)</strong>
+    </dt>
+    <dd>
+    Convert explicit columnbreaks.
+ This function converts any explict columnbreak markup in an element
+ into a single syntax: a Div with class <code>columnbreak</code>.
+ Note: if there are <code>column</code> Divs in the element we keep them
+ in case they harbour further formatting (e.g. html classes). However
+ we remove their <code>column</code> class to avoid double-processing when
+ column fields are nested.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elem</span>
+         Pandoc native Div element
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        elem modified as needed
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "tag_with_number_of_explicit_columnbreaks"></a>
+    <strong>tag_with_number_of_explicit_columnbreaks (elem)</strong>
+    </dt>
+    <dd>
+    Tag an element with the number of explicit columnbreaks it contains.
+ Counts the number of epxlicit columnbreaks contained in an element and
+ tags the element with a <code>number_explicit_columnbreaks</code> attribute.
+ In the process columnbreaks are tagged with the class <code>columnbreak_already_counted</code>
+ in order to avoid double-counting when multi-columns are nested.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elem</span>
+         Pandoc element (native Div element of class <a href="index.html#">columns</a>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        elem with the attribute <code>number_explicit_columnbreaks</code> set.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "consolidate_colattrib_aliases"></a>
+    <strong>consolidate_colattrib_aliases (elem)</strong>
+    </dt>
+    <dd>
+    Consolidate aliases for column attributes.
+ Provides syntacic sugar: unifies various ways of
+ specifying attributes of a multi-column environment.
+ When several specifications conflit, favours <code>column-gap</code> and
+ <code>column-rule</code> specifications.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elem</span>
+         Pandoc element (Div of class <a href="index.html#">columns</a>) with column attributes.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        elem modified as needed.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "preprocess_columns"></a>
+    <strong>preprocess_columns (elem)</strong>
+    </dt>
+    <dd>
+    Pre-process a Div of class <a href="index.html#">columns</a>.
+ Converts explicit column breaks into a unified syntax
+ and count the Div's number of columns.
+ When several columns are nested Pandoc will apply
+ this filter to the innermost <a href="index.html#">columns</a> Div first;
+ we use that feature to prevent double-counting.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elem</span>
+         Pandoc element to be processes (Div of class <a href="index.html#">columns</a>)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        elem modified as needed
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "determine_column_count"></a>
+    <strong>determine_column_count (elem)</strong>
+    </dt>
+    <dd>
+    Determine the number of column in a <a href="index.html#">columns</a> Div.
+ Looks up two attributes in the Div: the user-specified
+ <code>columns-count</code> and the filter-generated <code>number_explicit_columnbreaks</code>
+ which is based on the number of explicit breaks specified.
+ The final number of columns will be 2 or whichever of <code>column-count</code> and
+ <code>number_explicit_columnbreaks</code> is the highest. This ensures there are
+ enough columns for all explicit columnbreaks.
+ This provides a single-column when the user specifies <code>column-count = 1</code> and
+ there are no explicit columnbreaks.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elem</span>
+         Pandoc element (Div of class <a href="index.html#">columns</a>) whose number of columns is to be determined.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number of columns (number, default 2).
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "header_to_latex_and_inlines"></a>
+    <strong>header_to_latex_and_inlines (header)</strong>
+    </dt>
+    <dd>
+    Convert a pandoc Header to a list of inlines for latex output.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">header</span>
+         Pandoc Header element
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        list of Inline elements
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "format_colspan_latex"></a>
+    <strong>format_colspan_latex (elem, number_columns)</strong>
+    </dt>
+    <dd>
+    Format column span in LaTeX.
+ Formats a bit of text spanning across all columns for LaTeX output.
+ If the colspan is only one block, it is turned into an option
+ of a new <code>multicol</code> environment. Otherwise insert it is
+ inserted between the two <code>multicol</code> environments.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elem</span>
+
+<p> Pandoc element that is supposed to span across all</p>
+<pre><code>columns.
+</code></pre>
+
+        </li>
+        <li><span class="parameter">number_columns</span>
+         number of columns in the present environment.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        a pandoc RawBlock element in LaTeX format
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "format_columns_latex"></a>
+    <strong>format_columns_latex (elem)</strong>
+    </dt>
+    <dd>
+    Format columns for LaTeX output
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elem</span>
+
+<p> Pandoc element (Div of "columns" class) containing the</p>
+<pre><code>columns to be formatted.
+</code></pre>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        elem with suitable RawBlocks in LaTeX added
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "format_columns_html"></a>
+    <strong>format_columns_html (elem)</strong>
+    </dt>
+    <dd>
+    Formats columns for html output.
+ Uses CSS3 style added to the elements themselves.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">elem</span>
+         Pandoc element (Div of <a href="index.html#">columns</a> style)
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        elem with suitable html attributes
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2021-01-16 18:52:08 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
