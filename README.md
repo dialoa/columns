@@ -456,7 +456,7 @@ Content of the second column.
 </div>
 ```
 
-In CSS `break-after: column`{.css} means "after this element, place a column break".
+In CSS `break-after: column` means "after this element, place a column break".
 
 The classes `columns` and `column-span` are needed to ensure that the first
 element of a multiple columns `div`, or the first element after an element
