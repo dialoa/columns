@@ -115,8 +115,8 @@ Each opening series of colons needs to be matched with a closing ones. For
 readibility we usually match their number of colons but it's not necessary
 (as the above illustrates). If you enclose sections within sections (see
 container syntax, nesting, column spans and column breaks below)
-you need to make sure that each opening series of colons is matched with
-a closed ones, otherwise Pandoc will not recognize them or interpret
+you need to make sure that each opening series of colons is matched by
+a closing one, otherwise Pandoc will not recognize them or interpret
 them incorrectly.
 
 Here `columns` is a *attribute* of the fenced div (section). As we'll see below, these sections can have more than a single attribute. When they
