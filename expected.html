@@ -257,7 +257,7 @@
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>...content that will be spread over several columns...</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>::::::::::::::</span></code></pre></div>
-<p>Each opening series of colons needs to be matched with a closing ones. For readibility we usually match their number of colons but it’s not necessary (as the above illustrates). If you enclose sections within sections (see container syntax, nesting, column spans and column breaks below) you need to make sure that each opening series of colons is matched with a closed ones, otherwise Pandoc will not recognize them or interpret them incorrectly.</p>
+<p>Each opening series of colons needs to be matched with a closing ones. For readibility we usually match their number of colons but it’s not necessary (as the above illustrates). If you enclose sections within sections (see container syntax, nesting, column spans and column breaks below) you need to make sure that each opening series of colons is matched by a closing one, otherwise Pandoc will not recognize them or interpret them incorrectly.</p>
 <p>Here <code>columns</code> is a <em>attribute</em> of the fenced div (section). As we’ll see below, these sections can have more than a single attribute. When they have several, they need to be specified within curly brackets and <code>columns</code> should be preceded by a dot, as in:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>::::: {.columns .someattribute property=value}</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -396,11 +396,11 @@ content in columns
 <p>If both English names and <code>column-count</code> are used, the former prevails.</p>
 <h3 id="html-output">HTML output</h3>
 <p>The <code>html</code> output looks like this. Without column breaks:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;columns&quot;</span><span class="ot"> style=</span><span class="st">&quot;column-count: 2; column-rule: 1px solid black;&quot;</span><span class="kw">&gt;</span></span>
+<div class="sourceCode" id="cb13"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;columns&quot;</span> <span class="er">style</span><span class="ot">=</span><span class="st">&quot;column-count: 2; column-rule: 1px solid black;&quot;</span><span class="kw">&gt;</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>Content that distributed in columns...</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;column-span&quot;</span><span class="ot"> style=</span><span class="st">&quot;;&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;column-span&quot;</span> <span class="er">style</span><span class="ot">=</span><span class="st">&quot;;&quot;</span><span class="kw">&gt;</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>Content that spreads across all columns</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/div&gt;</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
@@ -408,16 +408,16 @@ content in columns
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/div&gt;</span></span></code></pre></div>
 <p>With columnbreaks:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;columns&quot;</span><span class="ot"> style=</span><span class="st">&quot;column-count: 2;&quot;</span><span class="kw">&gt;</span></span>
+<div class="sourceCode" id="cb14"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;columns&quot;</span> <span class="er">style</span><span class="ot">=</span><span class="st">&quot;column-count: 2;&quot;</span><span class="kw">&gt;</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>Content of the first column.</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span><span class="ot"> style=</span><span class="st">&quot;break-after: column;&quot;</span><span class="kw">&gt;&lt;/div&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span> <span class="er">style</span><span class="ot">=</span><span class="st">&quot;break-after: column;&quot;</span><span class="kw">&gt;&lt;/div&gt;</span></span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>Content of the second column.</span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/div&gt;</span></span></code></pre></div>
-<p>In CSS <code class="sourceCode css">break-after<span class="in">: column</span></code> means “after this element, place a column break”.</p>
+<p>In CSS <code>break-after: column</code> means “after this element, place a column break”.</p>
 <p>The classes <code>columns</code> and <code>column-span</code> are needed to ensure that the first element of a multiple columns <code>div</code>, or the first element after an element spanning across columns, have no top margin. If they had we would get unwanted space at the beginning of the first column. Thus the filter adds the following to the header:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">&lt;style&gt;</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">.columns</span> <span class="in">:first-child</span> {<span class="kw">margin-top</span>: <span class="dv">0</span><span class="op">;</span>}</span>

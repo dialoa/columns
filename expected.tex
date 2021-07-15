@@ -4,10 +4,14 @@
 %
 \documentclass[
 ]{article}
+\title{Columns - Multiple columns support in Pandoc's markdown}
+\author{Julien Dutant}
+\date{}
+
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -84,13 +88,9 @@
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{multicol}
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-
-\title{Columns - Multiple columns support in Pandoc's markdown}
-\author{Julien Dutant}
-\date{}
 
 \begin{document}
 \maketitle
@@ -225,7 +225,7 @@ For readibility we usually match their number of colons but it's not
 necessary (as the above illustrates). If you enclose sections within
 sections (see container syntax, nesting, column spans and column breaks
 below) you need to make sure that each opening series of colons is
-matched with a closed ones, otherwise Pandoc will not recognize them or
+matched by a closing one, otherwise Pandoc will not recognize them or
 interpret them incorrectly.
 
 Here \texttt{columns} is a \emph{attribute} of the fenced div (section).
@@ -587,11 +587,11 @@ The \texttt{html} output looks like this. Without column breaks:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{\textless{}div}\OtherTok{ class=}\StringTok{"columns"}\OtherTok{ style=}\StringTok{"column{-}count: 2; column{-}rule: 1px solid black;"}\KeywordTok{\textgreater{}}
+\KeywordTok{\textless{}div} \ErrorTok{class}\OtherTok{=}\StringTok{"columns"} \ErrorTok{style}\OtherTok{=}\StringTok{"column{-}count: 2; column{-}rule: 1px solid black;"}\KeywordTok{\textgreater{}}
 
 \NormalTok{Content that distributed in columns...}
 
-\KeywordTok{\textless{}div}\OtherTok{ class=}\StringTok{"column{-}span"}\OtherTok{ style=}\StringTok{";"}\KeywordTok{\textgreater{}}
+\KeywordTok{\textless{}div} \ErrorTok{class}\OtherTok{=}\StringTok{"column{-}span"} \ErrorTok{style}\OtherTok{=}\StringTok{";"}\KeywordTok{\textgreater{}}
 \NormalTok{Content that spreads across all columns}
 \KeywordTok{\textless{}/div\textgreater{}}
 
@@ -605,11 +605,11 @@ With columnbreaks:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{\textless{}div}\OtherTok{ class=}\StringTok{"columns"}\OtherTok{ style=}\StringTok{"column{-}count: 2;"}\KeywordTok{\textgreater{}}
+\KeywordTok{\textless{}div} \ErrorTok{class}\OtherTok{=}\StringTok{"columns"} \ErrorTok{style}\OtherTok{=}\StringTok{"column{-}count: 2;"}\KeywordTok{\textgreater{}}
 
 \NormalTok{Content of the first column.}
 
-\KeywordTok{\textless{}div}\OtherTok{ style=}\StringTok{"break{-}after: column;"}\KeywordTok{\textgreater{}\textless{}/div\textgreater{}}
+\KeywordTok{\textless{}div} \ErrorTok{style}\OtherTok{=}\StringTok{"break{-}after: column;"}\KeywordTok{\textgreater{}\textless{}/div\textgreater{}}
 
 \NormalTok{Content of the second column.}
 
@@ -617,8 +617,8 @@ With columnbreaks:
 \end{Highlighting}
 \end{Shaded}
 
-In CSS \VERB|\NormalTok{break{-}after}\InformationTok{: column}| means
-``after this element, place a column break''.
+In CSS \texttt{break-after:\ column} means ``after this element, place a
+column break''.
 
 The classes \texttt{columns} and \texttt{column-span} are needed to
 ensure that the first element of a multiple columns \texttt{div}, or the
