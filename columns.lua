@@ -6,7 +6,7 @@ latex and html outputs. For details, see README.md.
 @author Julien Dutant <julien.dutant@kcl.ac.uk>
 @copyright 2021 Julien Dutant
 @license MIT - see LICENSE file for details.
-@release 1.0
+@release 1.1
 ]]
 
 -- # Internal settings
@@ -18,6 +18,20 @@ local target_formats = {
 }
 
 -- # Helper functions
+
+--- type: pandoc-friendly type function
+-- panbdoc.utils.type is only defined in Pandoc >= 2.17
+-- if it isn't, we extend Lua's type function to give the same values
+-- as pandoc.utils.type on Meta objects: Inlines, Inline, Blocks, Block,
+-- string and booleans
+-- Caution: not to be used on non-Meta Pandoc elements, the
+-- results will differ (only 'Block', 'Blocks', 'Inline', 'Inlines' in
+-- >=2.17, the .t string in <2.17).
+local utils = require('pandoc.utils')
+local type = utils.type or function (obj)
+        local tag = type(obj) == 'table' and obj.t and obj.t:gsub('^Meta', '')
+        return tag and tag ~= 'Map' and tag or type(obj)
+    end
 
 --- Test whether the target format is in a given list.
 -- @param formats list of formats to be matched
@@ -38,19 +52,23 @@ end
 -- @return meta the modified metadata block
 local function add_header_includes(meta, block)
 
-    local header_includes
+    local header_includes = pandoc.List:new()
 
-    -- make meta['header-includes'] a list if needed
-    if meta['header-includes'] and meta['header-includes'].t == 'MetaList' then
-        header_includes = meta['header-includes']
-    else
-        header_includes = pandoc.MetaList{meta['header-includes']}
+    -- use meta['header-includes']
+
+    if meta['header-includes'] then
+      if type(meta['header-includes']) ==  'List' then
+        header_includes:extend(meta['header-includes'])
+      else
+        header_includes:insert(pandoc.utils.stringify(meta['header-includes']))
+      end
     end
 
-    -- insert `block` in header-includes and add it to `meta`
+    -- insert `block` in header-includes
 
-    header_includes[#header_includes + 1] =
-        pandoc.MetaBlocks{block}
+    header_includes:insert(pandoc.MetaBlocks({block}))
+
+    -- save header-includes in the document's meta
 
     meta['header-includes'] = header_includes
 

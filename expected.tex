@@ -4,10 +4,6 @@
 %
 \documentclass[
 ]{article}
-\title{Columns - Multiple columns support in Pandoc's markdown}
-\author{Julien Dutant}
-\date{}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
 \usepackage{iftex}
@@ -91,6 +87,10 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+
+\title{Columns - Multiple columns support in Pandoc's markdown}
+\author{Julien Dutant}
+\date{}
 
 \begin{document}
 \maketitle
@@ -321,21 +321,23 @@ tincidunt. Nunc imperdiet finibus tincidunt.
 Elements that span across all columns are introduced as
 \texttt{column-span} (or \texttt{columnspan}) sections:
 
-\begin{verbatim}
-::: columns ::::::::
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{::: columns ::::::::}
 
-content in columns
+\NormalTok{content in columns}
 
-::::: column-span
+\NormalTok{::::: column{-}span}
 
-# This heading spans across all columns
+\NormalTok{\# This heading spans across all columns}
 
-:::::
+\NormalTok{:::::}
 
-content in columns
+\NormalTok{content in columns}
 
-:::
-\end{verbatim}
+\NormalTok{:::}
+\end{Highlighting}
+\end{Shaded}
 
 Here is an illustration:
 
