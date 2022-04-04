@@ -60,7 +60,7 @@ local function add_header_includes(meta, block)
       if type(meta['header-includes']) ==  'List' then
         header_includes:extend(meta['header-includes'])
       else
-        header_includes:insert(pandoc.utils.stringify(meta['header-includes']))
+        header_includes:insert(meta['header-includes'])
       end
     end
 
