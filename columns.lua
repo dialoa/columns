@@ -748,6 +748,14 @@ local function format_columns_latex(elem)
   local latex_begin = '{'
   local latex_end = '}'
 
+  if elem.classes:includes('ragged')
+      or elem.classes:includes('raggedcolumns')
+      or elem.classes:includes('ragged-columns') then
+
+        latex_begin = latex_begin..'\\raggedcolumns'
+        
+  end
+
   if elem.attr.attributes then
 
     if elem.attr.attributes["column-gap"] then

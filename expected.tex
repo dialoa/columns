@@ -33,14 +33,6 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={Columns - Multiple columns support in Pandoc's markdown},
-  pdfauthor={Julien Dutant},
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -52,7 +44,7 @@
 \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
 \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
 \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
-\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
 \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
 \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
 \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
@@ -65,7 +57,7 @@
 \newcommand{\ExtensionTok}[1]{#1}
 \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
 \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
-\newcommand{\ImportTok}[1]{#1}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
 \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
 \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
@@ -87,6 +79,14 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Columns - Multiple columns support in Pandoc's markdown},
+  pdfauthor={Julien Dutant},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Columns - Multiple columns support in Pandoc's markdown}
 \author{Julien Dutant}
@@ -264,6 +264,93 @@ of columns in various ways:
 
 Note that in \texttt{html} browsers may override your specified number
 of columns.
+
+\hypertarget{ragged-columns-latex-output-only}{%
+\subsubsection{Ragged columns (LaTeX output
+only)}\label{ragged-columns-latex-output-only}}
+
+Default LaTeX/PDF output justifies columns vertically. That is, LaTeX
+tries to make sure that each column but the last occupies the whole
+column height by stretching the space between paragraphs. If you want to
+avoid vertical stretching and leave space at the end of each columns
+instead, add the \texttt{ragged} class to your \texttt{columns} div.
+(\texttt{raggedcolumns} and \texttt{ragged-columns} work too).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{::::: \{.columns .ragged\}}
+
+\NormalTok{...}
+
+\NormalTok{:::::}
+\end{Highlighting}
+\end{Shaded}
+
+Here's a illustration of the default behaviour:
+
+{\begin{multicols}{4}
+
+This column
+
+is vertically short.
+
+\columnbreak
+
+This column
+
+is vertically short.
+
+\columnbreak
+
+\columnbreak
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ante in
+mi ornare volutpat sed sit amet diam. Nullam interdum erat a augue
+faucibus, nec tempus tortor sagittis. Aenean imperdiet imperdiet
+dignissim. Nam aliquam blandit ex, sed molestie nibh feugiat ac. Morbi
+feugiat convallis semper. Ut et consequat purus. Fusce convallis
+vehicula enim in vulputate. Curabitur a augue arcu. Mauris laoreet
+lectus arcu, sed elementum turpis scelerisque id. Etiam porta turpis
+quis ipsum dictum vulputate. In ut convallis urna, at imperdiet nunc.
+Cras laoreet, massa lobortis gravida egestas, lacus est pellentesque
+arcu, imperdiet efficitur nibh dolor vel sapien. Sed accumsan
+condimentum diam non pellentesque.
+
+\end{multicols}
+}
+
+Now in ragged columns mode:
+
+{\raggedcolumns\begin{multicols}{4}
+
+This column
+
+is vertically short.
+
+\columnbreak
+
+This column
+
+is vertically short.
+
+\columnbreak
+
+\columnbreak
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ante in
+mi ornare volutpat sed sit amet diam. Nullam interdum erat a augue
+faucibus, nec tempus tortor sagittis. Aenean imperdiet imperdiet
+dignissim. Nam aliquam blandit ex, sed molestie nibh feugiat ac. Morbi
+feugiat convallis semper. Ut et consequat purus. Fusce convallis
+vehicula enim in vulputate. Curabitur a augue arcu. Mauris laoreet
+lectus arcu, sed elementum turpis scelerisque id. Etiam porta turpis
+quis ipsum dictum vulputate. In ut convallis urna, at imperdiet nunc.
+Cras laoreet, massa lobortis gravida egestas, lacus est pellentesque
+arcu, imperdiet efficitur nibh dolor vel sapien. Sed accumsan
+condimentum diam non pellentesque.
+
+\end{multicols}
+}
 
 \hypertarget{customizing-the-gap-and-rule-between-columns}{%
 \subsubsection{Customizing the gap and rule between

@@ -149,6 +149,77 @@ number of columns in various ways:
 
 Note that in `html` browsers may override your specified number of columns.
 
+### Ragged columns (LaTeX output only)
+
+Default LaTeX/PDF output justifies columns vertically. That is, if columns are
+explicitly broken at certain points, LaTeX ensures that the text in each
+column occupies its full height by stretching inter-paragraph space. If you 
+want to avoid this add the `ragged` class to your `columns` div.
+(`raggedcolumns` and `ragged-columns` work too).
+
+In HTML output columns are always ragged.
+
+```markdown
+::::: {.columns .ragged}
+
+...
+
+:::::
+```
+
+Here's a illustration of the default LaTeX behaviour:
+
+::::: columns
+
+::: column
+This column
+
+is vertically short.
+::: 
+
+::: column
+This column
+
+is vertically short.
+:::
+
+::: column
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ante
+in mi ornare volutpat sed sit amet diam. Nullam interdum erat a augue
+faucibus, nec tempus tortor sagittis. Aenean imperdiet imperdiet
+dignissim. Nam aliquam blandit ex, sed molestie nibh feugiat ac. Morbi
+feugiat convallis semper. Ut et consequat purus. Fusce convallis
+vehicula enim in vulputate.
+::: 
+:::::
+
+Now in ragged columns mode:
+
+::::: {.columns .ragged}
+
+::: column
+This column
+
+is vertically short.
+::: 
+
+::: column
+This column
+
+is vertically short.
+:::
+
+::: column
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ante
+in mi ornare volutpat sed sit amet diam. Nullam interdum erat a augue
+faucibus, nec tempus tortor sagittis. Aenean imperdiet imperdiet
+dignissim. Nam aliquam blandit ex, sed molestie nibh feugiat ac. Morbi
+feugiat convallis semper. Ut et consequat purus. Fusce convallis
+vehicula enim in vulputate.
+::: 
+:::::
+
+
 ### Customizing the gap and rule between columns
 
 The gap and rule between columns can be customized too. The gap is
