@@ -9,6 +9,9 @@ latex and html outputs. For details, see README.md.
 @release 1.1.2
 ]]
 
+-- # Backwards compability with Pandoc <= 2.6
+pandoc.utils = require 'pandoc.utils'
+
 -- # Internal settings
 
 -- target_formats  filter is triggered when those format are targeted
