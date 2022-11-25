@@ -4,11 +4,11 @@ DIFF ?= diff --strip-trailing-cr -u
 
 test: test_html test_latex
 
-test_html: README.md columns.lua expected.html
+test_html: README.md columns.lua
 	@pandoc --lua-filter columns.lua --standalone --to=html $< \
 	    | $(DIFF) expected.html -
 
-test_latex: README.md columns.lua expected.tex
+test_latex: README.md columns.lua
 	@pandoc --lua-filter columns.lua --standalone --to=latex $< \
 	    | $(DIFF) expected.tex -
 
