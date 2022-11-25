@@ -6,7 +6,7 @@ latex and html outputs. For details, see README.md.
 @author Julien Dutant <julien.dutant@kcl.ac.uk>
 @copyright 2021 Julien Dutant
 @license MIT - see LICENSE file for details.
-@release 1.1
+@release 1.1.2
 ]]
 
 -- # Internal settings
@@ -753,7 +753,7 @@ local function format_columns_latex(elem)
       or elem.classes:includes('ragged-columns') then
 
         latex_begin = latex_begin..'\\raggedcolumns'
-        
+
   end
 
   if elem.attr.attributes then
