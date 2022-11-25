@@ -176,7 +176,7 @@ The filter will render this section as a multicolumns layout in
 document with \texttt{pandoc} using this filter to see the results in
 \texttt{html} or \texttt{pdf}:
 
-{\begin{multicols}{2}
+{\raggedcolumns\begin{multicols}{2}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ante in
 mi ornare volutpat sed sit amet diam. Nullam interdum erat a augue
@@ -269,12 +269,24 @@ of columns.
 \subsubsection{Ragged columns (LaTeX output
 only)}\label{ragged-columns-latex-output-only}}
 
-Default LaTeX/PDF output justifies columns vertically. That is, LaTeX
-tries to make sure that each column but the last occupies the whole
-column height by stretching the space between paragraphs. If you want to
-avoid vertical stretching and leave space at the end of each columns
-instead, add the \texttt{ragged} class to your \texttt{columns} div.
-(\texttt{raggedcolumns} and \texttt{ragged-columns} work too).
+Default LaTeX/PDF output justifies columns vertically. That is, if
+columns are explicitly broken at certain points, LaTeX ensures that the
+text in each column occupies its full height by stretching
+inter-paragraph space. In HTML output columns are always ``ragged'',
+that is, inter-paragraph space isn't stretched and shorter columns have
+blank space at the end.
+
+If you want ragged columns in LaTeX, you can set this globally in the
+document's metadata or on locally on a give \texttt{columns} Div. In the
+document data, either of these keys will work:
+
+\begin{verbatim}
+ragged-columns: true
+raggedcolumns: true
+\end{verbatim}
+
+Locally, add the \texttt{ragged} (or \texttt{raggedcolumns} or
+\texttt{ragged-columns}) class to a \texttt{columns} Div:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -286,9 +298,15 @@ instead, add the \texttt{ragged} class to your \texttt{columns} div.
 \end{Highlighting}
 \end{Shaded}
 
-Here's a illustration of the default behaviour:
+Note that this doesn't work on individual \texttt{column} Divs, only on
+the \texttt{columns} Div that contains them.
 
-{\begin{multicols}{4}
+There is a corresponding \texttt{justifiedcolumns} (alias
+\texttt{justified-columns}) global setting and a \texttt{justified}
+(alias \texttt{justifiedcolumns}, \texttt{justified-columns}) class for
+specific \texttt{columns} Div.
+
+{\begin{multicols}{3}
 
 This column
 
@@ -299,8 +317,6 @@ is vertically short.
 This column
 
 is vertically short.
-
-\columnbreak
 
 \columnbreak
 
@@ -309,19 +325,14 @@ mi ornare volutpat sed sit amet diam. Nullam interdum erat a augue
 faucibus, nec tempus tortor sagittis. Aenean imperdiet imperdiet
 dignissim. Nam aliquam blandit ex, sed molestie nibh feugiat ac. Morbi
 feugiat convallis semper. Ut et consequat purus. Fusce convallis
-vehicula enim in vulputate. Curabitur a augue arcu. Mauris laoreet
-lectus arcu, sed elementum turpis scelerisque id. Etiam porta turpis
-quis ipsum dictum vulputate. In ut convallis urna, at imperdiet nunc.
-Cras laoreet, massa lobortis gravida egestas, lacus est pellentesque
-arcu, imperdiet efficitur nibh dolor vel sapien. Sed accumsan
-condimentum diam non pellentesque.
+vehicula enim in vulputate.
 
 \end{multicols}
 }
 
 Now in ragged columns mode:
 
-{\raggedcolumns\begin{multicols}{4}
+{\raggedcolumns\begin{multicols}{3}
 
 This column
 
@@ -332,8 +343,6 @@ is vertically short.
 This column
 
 is vertically short.
-
-\columnbreak
 
 \columnbreak
 
@@ -342,12 +351,7 @@ mi ornare volutpat sed sit amet diam. Nullam interdum erat a augue
 faucibus, nec tempus tortor sagittis. Aenean imperdiet imperdiet
 dignissim. Nam aliquam blandit ex, sed molestie nibh feugiat ac. Morbi
 feugiat convallis semper. Ut et consequat purus. Fusce convallis
-vehicula enim in vulputate. Curabitur a augue arcu. Mauris laoreet
-lectus arcu, sed elementum turpis scelerisque id. Etiam porta turpis
-quis ipsum dictum vulputate. In ut convallis urna, at imperdiet nunc.
-Cras laoreet, massa lobortis gravida egestas, lacus est pellentesque
-arcu, imperdiet efficitur nibh dolor vel sapien. Sed accumsan
-condimentum diam non pellentesque.
+vehicula enim in vulputate.
 
 \end{multicols}
 }
@@ -372,7 +376,7 @@ using CSS syntax.
 
 Here is an illustration:
 
-{\setlength{\columnsep}{4em}
+{\raggedcolumns\setlength{\columnsep}{4em}
 \setlength{\columnseprule}{ 3pt}
 \renewcommand{\columnseprulecolor}{\color{blue}}
 \begin{multicols}{3}
@@ -428,7 +432,7 @@ Elements that span across all columns are introduced as
 
 Here is an illustration:
 
-{\setlength{\columnseprule}{ 1pt}
+{\raggedcolumns\setlength{\columnseprule}{ 1pt}
 \renewcommand{\columnseprulecolor}{\color{black}}
 \begin{multicols}{2}
 
@@ -496,7 +500,7 @@ Column breaks can be explicitly specified. This can be done using
 
 The result is:
 
-{\begin{multicols}{4}
+{\raggedcolumns\begin{multicols}{4}
 
 This content is in a first column.
 
@@ -568,7 +572,7 @@ outputs are not supported here.
 Container syntax and columnbreak syntax can be mixed, as in the example
 below:
 
-{\begin{multicols}{3}
+{\raggedcolumns\begin{multicols}{3}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ante in
 mi ornare volutpat sed sit amet diam. Nullam interdum erat a augue
@@ -604,7 +608,7 @@ justo quis, vestibulum mollis ex.
 Multicolumn sections can be nested. Support for nesting may vary across
 browsers. Here is an illustration:
 
-{\begin{multicols}{3}
+{\raggedcolumns\begin{multicols}{3}
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ante in
 mi ornare volutpat sed sit amet diam. Nullam interdum erat a augue
@@ -619,7 +623,7 @@ Mauris laoreet lectus arcu, sed elementum turpis scelerisque id. Etiam
 porta turpis quis ipsum dictum vulputate. In ut convallis urna, at
 imperdiet nunc.
 
-{\begin{multicols}{2}
+{\raggedcolumns\begin{multicols}{2}
 
 This is a two-column section nested within the middle column of a
 three-column section.

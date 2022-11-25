@@ -1,6 +1,7 @@
 ---
 title: "Columns - Multiple columns support in Pandoc's markdown"
 author: "Julien Dutant"
+ragged-columns: true
 ---
 
 Columns
@@ -153,11 +154,21 @@ Note that in `html` browsers may override your specified number of columns.
 
 Default LaTeX/PDF output justifies columns vertically. That is, if columns are
 explicitly broken at certain points, LaTeX ensures that the text in each
-column occupies its full height by stretching inter-paragraph space. If you 
-want to avoid this add the `ragged` class to your `columns` div.
-(`raggedcolumns` and `ragged-columns` work too).
+column occupies its full height by stretching inter-paragraph space. 
+In HTML output columns are always "ragged", that is, inter-paragraph space 
+isn't stretched and shorter columns have blank space at the end.
 
-In HTML output columns are always ragged.
+If you want ragged columns in LaTeX, you can set this globally in the 
+document's metadata or on locally on a give `columns` Div. In the 
+document data, either of these keys will work:
+
+```
+ragged-columns: true
+raggedcolumns: true
+```
+
+Locally, add the `ragged` (or `raggedcolumns` or `ragged-columns`) class to a
+`columns` Div:
 
 ```markdown
 ::::: {.columns .ragged}
@@ -167,9 +178,14 @@ In HTML output columns are always ragged.
 :::::
 ```
 
-Here's a illustration of the default LaTeX behaviour:
+Note that this doesn't work on individual `column` Divs, only on the 
+`columns` Div that contains them.
 
-::::: columns
+There is a corresponding `justifiedcolumns` (alias `justified-columns`) 
+global setting and a `justified` (alias `justifiedcolumns`, `justified-columns`)
+class for specific `columns` Div.
+
+::::: {.columns .justified}
 
 ::: column
 This column
@@ -195,7 +211,7 @@ vehicula enim in vulputate.
 
 Now in ragged columns mode:
 
-::::: {.columns .ragged}
+::::: columns
 
 ::: column
 This column

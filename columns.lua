@@ -10,22 +10,28 @@ latex and html outputs. For details, see README.md.
 ]]
 
 -- # Version control
+local required_version = '2.9.0'
+local version_err_msg = "ERROR: pandoc >= "..required_version
+                .." required for columns filter"
 -- pandoc 2.9 required for pandoc.List insert method
 if PANDOC_VERSION == nil then -- if pandoc_version < 2.1
-  error("ERROR: pandoc >= 2.7 required for columns filter")
-elseif PANDOC_VERSION[2] < 7 then
-  error("ERROR: pandoc >= 2.9 required for columns filter")
+  error(version_err_msg)
+elseif PANDOC_VERSION[2] < 9 then
+  error(version_err_msg)
 else  
-  PANDOC_VERSION:must_be_at_least {2,9}
+  PANDOC_VERSION:must_be_at_least(required_version, version_err_msg)
 end
 local utils = require('pandoc.utils') -- this is superfluous in Pandoc >= 2.7 I think
 
 -- # Internal settings
 
--- target_formats  filter is triggered when those format are targeted
+-- target_formats  filter is triggered when those formats are targeted
 local target_formats = {
   "html.*",
   "latex",
+}
+local options = {
+  raggedcolumns = false; -- global ragged columns option
 }
 
 -- # Helper functions
@@ -757,13 +763,20 @@ local function format_columns_latex(elem)
 
   local latex_begin = '{'
   local latex_end = '}'
+  local ragged = options.raggedcolumns
 
+  -- override global ragged setting?
   if elem.classes:includes('ragged')
       or elem.classes:includes('raggedcolumns')
       or elem.classes:includes('ragged-columns') then
-
-        latex_begin = latex_begin..'\\raggedcolumns'
-
+        ragged = true
+  elseif elem.classes:includes('justified')
+      or elem.classes:includes('justifiedcolumns')
+      or elem.classes:includes('justified-columns') then
+        ragged = false
+  end
+  if ragged then
+    latex_begin = latex_begin..'\\raggedcolumns'
   end
 
   if elem.attr.attributes then
@@ -1033,6 +1046,22 @@ syntactic_sugar_filter = {
 
 }
 
+--- Read options filter
+read_options_filter = {
+  Meta = function (meta)
+
+    if not meta then return end
+
+    -- global vertical ragged / justified settings
+    if meta.raggedcolumns or meta['ragged-columns'] then
+      options.raggedcolumns = true
+    elseif meta.justifiedcolumns or meta['justified-columns'] then
+      options.raggedcolumns = false
+    end
+
+  end
+}
+
 -- Main statement returns filters only if the
 -- target format matches our list. The filters
 -- returned are applied in the following order:
@@ -1046,9 +1075,12 @@ syntactic_sugar_filter = {
 -- 3. `format_filter` formats the columns after the counting
 --    has been done
 if format_matches(target_formats) then
-  return {syntactic_sugar_filter,
+  return {
+    read_options_filter,
+    syntactic_sugar_filter,
     preprocess_filter,
-    format_filter}
+    format_filter
+  }
 else
   return
 end
