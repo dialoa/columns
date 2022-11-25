@@ -9,8 +9,16 @@ latex and html outputs. For details, see README.md.
 @release 1.1.2
 ]]
 
--- # Backwards compability with Pandoc <= 2.6
-pandoc.utils = require 'pandoc.utils'
+-- # Version control
+-- pandoc 2.9 required for pandoc.List insert method
+if PANDOC_VERSION == nil then -- if pandoc_version < 2.1
+  error("ERROR: pandoc >= 2.7 required for columns filter")
+elseif PANDOC_VERSION[2] < 7 then
+  error("ERROR: pandoc >= 2.9 required for columns filter")
+else  
+  PANDOC_VERSION:must_be_at_least {2,9}
+end
+local utils = require('pandoc.utils')
 
 -- # Internal settings
 
@@ -30,7 +38,6 @@ local target_formats = {
 -- Caution: not to be used on non-Meta Pandoc elements, the
 -- results will differ (only 'Block', 'Blocks', 'Inline', 'Inlines' in
 -- >=2.17, the .t string in <2.17).
-local utils = require('pandoc.utils')
 local type = utils.type or function (obj)
         local tag = type(obj) == 'table' and obj.t and obj.t:gsub('^Meta', '')
         return tag and tag ~= 'Map' and tag or type(obj)
