@@ -18,7 +18,7 @@ elseif PANDOC_VERSION[2] < 7 then
 else  
   PANDOC_VERSION:must_be_at_least {2,9}
 end
-local utils = require('pandoc.utils')
+local utils = require('pandoc.utils') -- this is superfluous in Pandoc >= 2.7 I think
 
 -- # Internal settings
 
