@@ -3,6 +3,9 @@ DIFF ?= diff --strip-trailing-cr -u
 .PHONY: test
 
 test: test_html test_latex
+	@echo Test complete.
+
+recreate: expected.html expected.tex
 
 test_html: README.md columns.lua
 	@pandoc --lua-filter columns.lua --standalone --to=html $< \
