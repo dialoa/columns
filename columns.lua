@@ -406,7 +406,8 @@ local function convert_explicit_columbreaks(elem)
   -- if `elem` ends with a `column` Div, this last Div should
   -- not generate a columnbreak. We tag it to make sure we don't convert it.
 
-  if elem.content[#elem.content] and elem.content[#elem.content].classes
+  if #elem.content > 0
+    and elem.content[#elem.content].t == 'Div'
     and elem.content[#elem.content].classes:includes('column') then
 
     elem.content[#elem.content] =
