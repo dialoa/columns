@@ -9,7 +9,7 @@ Columns
 
 Multiple columns support in Pandoc's markdown.
 
-v1.1.2. Copyright: © 2021 Julien Dutant <julien.dutant@kcl.ac.uk>
+Copyright: ©2021-23 Julien Dutant <julien.dutant@kcl.ac.uk>
 License:  MIT - see LICENSE file for details.
 
 Introduction

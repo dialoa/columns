@@ -6,7 +6,7 @@ latex and html outputs. For details, see README.md.
 @author Julien Dutant <julien.dutant@kcl.ac.uk>
 @copyright 2021 Julien Dutant
 @license MIT - see LICENSE file for details.
-@release 1.1.2
+@release 1.1.3
 ]]
 
 -- # Version control
@@ -16,7 +16,7 @@ local version_err_msg = "ERROR: pandoc >= "..required_version
 -- pandoc 2.9 required for pandoc.List insert method
 if PANDOC_VERSION == nil then -- if pandoc_version < 2.1
   error(version_err_msg)
-elseif PANDOC_VERSION[2] < 9 then
+elseif PANDOC_VERSION[1] < 3 and PANDOC_VERSION[2] < 9 then
   error(version_err_msg)
 else  
   PANDOC_VERSION:must_be_at_least(required_version, version_err_msg)
