@@ -598,6 +598,11 @@ Contributing
 
 Issues and pull requests are welcome. They can be submitted [to the repository](https://github.com/jdutant/columns).
 
+Related
+-------
+
+* [pandoc-columns](https://github.com/mhwombat/pandoc-columns), a Pandoc filter written in Haskell. 
+
 References
 ----------
 
