@@ -15,16 +15,30 @@ License:  MIT - see LICENSE file for details.
 Introduction
 ------------
 
-This Lua filter for Pandoc provides multicolumn support in
-[Pandoc](https://pandoc.org/)'s markdown for outputs
-in `html` and LaTeX/PDF. It supports several markdown syntaxes,
-explicit column breaks, spanning elements, customisation and nesting.
+This Lua filter for Pandoc provides a flexible markdown syntax
+for multicolumn support in [Pandoc](https://pandoc.org/) 
+targetting both HTML and LaTeX/PDF output. Features:
+
+* Multiple markdown syntaxes ("three-columns" Div, nested "columns"
+  and "column" Div, "columns" with explicit column breaks)
+* Column breaks can be automatic or explicit
+* Spanning elements breaking across all columns
+* Customizing gaps and separators
+* Automatically provides CSS header / LaTeX preamble
+* Automatic typographic adjustements (avoid empty space
+  at the top of the first column which sometimes appears
+  in HTML).
+* Recursive (multi-columns within multi-columns)
+
 Html output relies on [CSS Multi-column layout](https://drafts.csswg.org/css-multicol) and LaTeX/PDF outputs on the [`multicol` LaTeX package](https://www.ctan.org/pkg/multicol).
 
 Limitations: in `html` output, support is limited to recent
 browsers and variable across browsers.
 
 This document also serves as a test document. To see the multi-columns layouts of this document in action, you need to process it with `pandoc` using this filter.
+
+__NOTE__ This README.md is a demonstration file, it is [better
+viewed as PDF](https://github.com/dialoa/columns/blob/master/test.pdf). 
 
 Pre-requistes
 -------------
@@ -131,6 +145,82 @@ should be preceded by a dot, as in:
 
 :::::
 ```
+
+### Beware of Divs in fluid columns
+
+With fluid columns, i.e. no explicit line breaks, browsers
+decide where to put line breaks. Beware though that Divs
+elements within a column are counted as unbreakable blocks
+in most browsers. For instance, the following places a 
+Div with classes ".only-in-format .html" within a fluid 
+multiple columns:
+
+```markdown
+::::: columns
+
+::: {.only-in-format .latex}
+
+First paragraph (...)
+
+Second paragraph (...)
+
+Third paragraph (...)
+
+:::
+
+:::::
+```
+
+You might expect the columns to break between one of these
+paragraphs or within them. But they won't: browsers will
+usually treat the entire three-paragraph Div as one block
+that will stay in a single column. Solutions: either move
+the contained outside, or break it into multiple ones.
+
+Moving it outside:
+
+```markdown
+::: {.only-in-format .latex}
+
+::::: columns
+
+First paragraph (...)
+
+Second paragraph (...)
+
+Third paragraph (...)
+
+:::::
+
+:::
+```
+
+Breaking it up:
+
+```markdown
+::::: columns
+
+::: {.only-in-format .latex}
+
+First paragraph (...)
+
+:::
+
+::: {.only-in-format .latex}
+
+Second paragraph (...)
+
+:::
+
+::: {.only-in-format .latex}
+
+Third paragraph (...)
+
+:::
+
+:::::
+```
+
 
 ### Specifying the number of columns
 
@@ -315,7 +405,7 @@ arcu, imperdiet efficitur nibh dolor vel sapien. Sed accumsan
 condimentum diam non pellentesque.
 
 ::: columnspan
-# Vestibulum cursus nisi risus, sit amet consectetur massa suscipit nec
+## Vestibulum cursus nisi risus, sit amet consectetur massa suscipit nec {.unnumbered}
 :::
 
 Sed condimentum, est id iaculis ornare, purus risus finibus felis,

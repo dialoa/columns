@@ -110,10 +110,30 @@ License: MIT - see LICENSE file for details.
 \hypertarget{introduction}{%
 \subsection{Introduction}\label{introduction}}
 
-This Lua filter for Pandoc provides multicolumn support in
-\href{https://pandoc.org/}{Pandoc}'s markdown for outputs in
-\texttt{html} and LaTeX/PDF. It supports several markdown syntaxes,
-explicit column breaks, spanning elements, customisation and nesting.
+This Lua filter for Pandoc provides a flexible markdown syntax for
+multicolumn support in \href{https://pandoc.org/}{Pandoc} targetting
+both HTML and LaTeX/PDF output. Features:
+
+\begin{itemize}
+\tightlist
+\item
+  Multiple markdown syntaxes (``three-columns'' Div, nested ``columns''
+  and ``column'' Div, ``columns'' with explicit column breaks)
+\item
+  Column breaks can be automatic or explicit
+\item
+  Spanning elements breaking across all columns
+\item
+  Customizing gaps and separators
+\item
+  Automatically provides CSS header / LaTeX preamble
+\item
+  Automatic typographic adjustements (avoid empty space at the top of
+  the first column which sometimes appears in HTML).
+\item
+  Recursive (multi-columns within multi-columns)
+\end{itemize}
+
 Html output relies on \href{https://drafts.csswg.org/css-multicol}{CSS
 Multi-column layout} and LaTeX/PDF outputs on the
 \href{https://www.ctan.org/pkg/multicol}{\texttt{multicol} LaTeX
@@ -125,6 +145,10 @@ browsers and variable across browsers.
 This document also serves as a test document. To see the multi-columns
 layouts of this document in action, you need to process it with
 \texttt{pandoc} using this filter.
+
+\textbf{NOTE} This README.md is a demonstration file, it is
+\href{https://github.com/dialoa/columns/blob/master/test.pdf}{better
+viewed as PDF}.
 
 \hypertarget{pre-requistes}{%
 \subsection{Pre-requistes}\label{pre-requistes}}
@@ -241,6 +265,88 @@ curly brackets and \texttt{columns} should be preceded by a dot, as in:
 \NormalTok{::::: \{.columns .someattribute property=value\}}
 
 \NormalTok{...content that will be spread over several columns...}
+
+\NormalTok{:::::}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{beware-of-divs-in-fluid-columns}{%
+\subsubsection{Beware of Divs in fluid
+columns}\label{beware-of-divs-in-fluid-columns}}
+
+With fluid columns, i.e.~no explicit line breaks, browsers decide where
+to put line breaks. Beware though that Divs elements within a column are
+counted as unbreakable blocks in most browsers. For instance, the
+following places a Div with classes ``.only-in-format .html'' within a
+fluid multiple columns:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{::::: columns}
+
+\NormalTok{::: \{.only{-}in{-}format .latex\}}
+
+\NormalTok{First paragraph (...)}
+
+\NormalTok{Second paragraph (...)}
+
+\NormalTok{Third paragraph (...)}
+
+\NormalTok{:::}
+
+\NormalTok{:::::}
+\end{Highlighting}
+\end{Shaded}
+
+You might expect the columns to break between one of these paragraphs or
+within them. But they won't: browsers will usually treat the entire
+three-paragraph Div as one block that will stay in a single column.
+Solutions: either move the contained outside, or break it into multiple
+ones.
+
+Moving it outside:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{::: \{.only{-}in{-}format .latex\}}
+
+\NormalTok{::::: columns}
+
+\NormalTok{First paragraph (...)}
+
+\NormalTok{Second paragraph (...)}
+
+\NormalTok{Third paragraph (...)}
+
+\NormalTok{:::::}
+
+\NormalTok{:::}
+\end{Highlighting}
+\end{Shaded}
+
+Breaking it up:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{::::: columns}
+
+\NormalTok{::: \{.only{-}in{-}format .latex\}}
+
+\NormalTok{First paragraph (...)}
+
+\NormalTok{:::}
+
+\NormalTok{::: \{.only{-}in{-}format .latex\}}
+
+\NormalTok{Second paragraph (...)}
+
+\NormalTok{:::}
+
+\NormalTok{::: \{.only{-}in{-}format .latex\}}
+
+\NormalTok{Third paragraph (...)}
+
+\NormalTok{:::}
 
 \NormalTok{:::::}
 \end{Highlighting}
@@ -453,7 +559,7 @@ condimentum diam non pellentesque.
 
 \end{multicols}
 \begin{multicols}{2}[\hypertarget{vestibulum-cursus-nisi-risus-sit-amet-consectetur-massa-suscipit-nec}{%
-\section{Vestibulum cursus nisi risus, sit amet consectetur massa
+\subsection{Vestibulum cursus nisi risus, sit amet consectetur massa
 suscipit
 nec}\label{vestibulum-cursus-nisi-risus-sit-amet-consectetur-massa-suscipit-nec}}]
 
@@ -779,6 +885,16 @@ Note that the \texttt{multicols} environment is wrapped within
 
 Issues and pull requests are welcome. They can be submitted
 \href{https://github.com/jdutant/columns}{to the repository}.
+
+\hypertarget{related}{%
+\subsection{Related}\label{related}}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://github.com/mhwombat/pandoc-columns}{pandoc-columns}, a
+  Pandoc filter written in Haskell.
+\end{itemize}
 
 \hypertarget{references}{%
 \subsection{References}\label{references}}
