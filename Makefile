@@ -24,4 +24,6 @@ expected.tex: README.md columns.lua
 	pandoc --lua-filter columns.lua --standalone --output $@ $<
 
 test.pdf: README.md columns.lua
-	pandoc --lua-filter columns.lua --standalone --output $@ $<
+	pandoc --lua-filter columns.lua --standalone \
+	-M colorlinks=true \
+	--output $@ $<
