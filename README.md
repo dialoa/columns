@@ -158,7 +158,7 @@ multiple columns:
 ```markdown
 ::::: columns
 
-::: {.only-in-format .latex}
+::: {.only-in-format .html}
 
 First paragraph (...)
 
@@ -180,7 +180,7 @@ the contained outside, or break it into multiple ones.
 Moving it outside:
 
 ```markdown
-::: {.only-in-format .latex}
+::: {.only-in-format .html}
 
 ::::: columns
 
@@ -200,19 +200,19 @@ Breaking it up:
 ```markdown
 ::::: columns
 
-::: {.only-in-format .latex}
+::: {.only-in-format .html}
 
 First paragraph (...)
 
 :::
 
-::: {.only-in-format .latex}
+::: {.only-in-format .html}
 
 Second paragraph (...)
 
 :::
 
-::: {.only-in-format .latex}
+::: {.only-in-format .html}
 
 Third paragraph (...)
 
