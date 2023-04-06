@@ -1,11 +1,13 @@
 DIFF ?= diff --strip-trailing-cr -u
 
-.PHONY: test
+all: test
 
+.PHONY: test
 test: test_html test_latex
 	@echo Test complete.
 
-generate: expected.html expected.tex
+.PHONY: generate
+generate: expected.html expected.tex test.pdf
 
 test_html: README.md columns.lua
 	@pandoc --lua-filter columns.lua --standalone --to=html $< \
@@ -19,4 +21,7 @@ expected.html: README.md columns.lua
 	pandoc --lua-filter columns.lua --standalone --output $@ $<
 
 expected.tex: README.md columns.lua
+	pandoc --lua-filter columns.lua --standalone --output $@ $<
+
+test.pdf: README.md columns.lua
 	pandoc --lua-filter columns.lua --standalone --output $@ $<
