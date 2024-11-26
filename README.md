@@ -15,9 +15,9 @@ License:  MIT - see LICENSE file for details.
 Introduction
 ------------
 
-This Lua filter for Pandoc provides a flexible markdown syntax
-for multicolumn support in [Pandoc](https://pandoc.org/) 
-targetting both HTML and LaTeX/PDF output. Features:
+This Lua filter for Pandoc provides a flexible markdown syntax for
+multicolumn support in [Pandoc](https://pandoc.org/) targetting
+both HTML and LaTeX/PDF output. Features:
 
 * Multiple markdown syntaxes ("three-columns" Div, nested "columns"
   and "column" Div, "columns" with explicit column breaks)
@@ -35,7 +35,9 @@ Html output relies on [CSS Multi-column layout](https://drafts.csswg.org/css-mul
 Limitations: in `html` output, support is limited to recent
 browsers and variable across browsers.
 
-This document also serves as a test document. To see the multi-columns layouts of this document in action, you need to process it with `pandoc` using this filter.
+This document also serves as a test document. To see the
+multi-columns layouts of this document in action, you need to
+process it with `pandoc` using this filter.
 
 __NOTE__ This README.md is a demonstration file, it is [better
 viewed as PDF](https://github.com/dialoa/columns/blob/master/test.pdf). 
@@ -43,9 +45,10 @@ viewed as PDF](https://github.com/dialoa/columns/blob/master/test.pdf).
 Pre-requistes
 -------------
 
-Requires [Pandoc](https://pandoc.org/). Copy the file `columns.lua` in
-your working folder or in Pandoc's `filter` folder.
-Called from the command line with a `-L` or  `--lua-filter` option:
+Requires [Pandoc](https://pandoc.org/). Copy the file
+`columns.lua` in your working folder or in Pandoc's `filter`
+folder. Called from the command line with a `-L` or
+`--lua-filter` option:
 
 ~~~~{.bash}
 pandoc --lua-filter columns.lua SOURCE.md -o DESTINATION.html
@@ -82,9 +85,10 @@ follows:
 :::
 ```
 
-The filter will render this section as a multicolumns layout in `html` and
-LaTeX, as illustrated below (you need to process this document with `pandoc`
-using this filter to see the results in `html` or `pdf`:
+The filter will render this section as a multicolumns layout in
+`html` and LaTeX, as illustrated below (you need to process this
+document with `pandoc` using this filter to see the results in
+`html` or `pdf`):
 
 ::: columns
 
@@ -126,13 +130,13 @@ end of your document). But more than three are fine:
 ::::::::::::::
 ```
 
-Each opening series of colons needs to be matched with a closing ones. For
-readibility we usually match their number of colons but it's not necessary
-(as the above illustrates). If you enclose sections within sections (see
-container syntax, nesting, column spans and column breaks below)
-you need to make sure that each opening series of colons is matched by
-a closing one, otherwise Pandoc will not recognize them or interpret
-them incorrectly.
+Each opening series of colons needs to be matched with a closing
+ones. For readibility we usually match their number of colons but
+it's not necessary (as the above illustrates). If you enclose
+sections within sections (see container syntax, nesting, column
+spans and column breaks below) you need to make sure that each
+opening series of colons is matched by a closing one, otherwise
+Pandoc will not recognize them or interpret them incorrectly.
 
 Here `columns` is a *attribute* of the fenced div (section). As we'll see below, these sections can have more than a single attribute. When they
 have several, they need to be specified within curly brackets and `columns`
@@ -145,82 +149,6 @@ should be preceded by a dot, as in:
 
 :::::
 ```
-
-### Beware of Divs in fluid columns
-
-With fluid columns, i.e. no explicit line breaks, browsers
-decide where to put line breaks. Beware though that Divs
-elements within a column are counted as unbreakable blocks
-in most browsers. For instance, the following places a 
-Div with classes ".only-in-format .html" within a fluid 
-multiple columns:
-
-```markdown
-::::: columns
-
-::: {.only-in-format .html}
-
-First paragraph (...)
-
-Second paragraph (...)
-
-Third paragraph (...)
-
-:::
-
-:::::
-```
-
-You might expect the columns to break between one of these
-paragraphs or within them. But they won't: browsers will
-usually treat the entire three-paragraph Div as one block
-that will stay in a single column. Solutions: either move
-the contained outside, or break it into multiple ones.
-
-Moving it outside:
-
-```markdown
-::: {.only-in-format .html}
-
-::::: columns
-
-First paragraph (...)
-
-Second paragraph (...)
-
-Third paragraph (...)
-
-:::::
-
-:::
-```
-
-Breaking it up:
-
-```markdown
-::::: columns
-
-::: {.only-in-format .html}
-
-First paragraph (...)
-
-:::
-
-::: {.only-in-format .html}
-
-Second paragraph (...)
-
-:::
-
-::: {.only-in-format .html}
-
-Third paragraph (...)
-
-:::
-
-:::::
-```
-
 
 ### Specifying the number of columns
 
@@ -536,6 +464,109 @@ posuere congue est nibh eget dui. Maecenas orci erat, commodo auctor
 justo quis, vestibulum mollis ex.
 
 :::::
+
+
+### Beware of Divs in fluid columns
+
+Fluid columns let browser decide where to put line breaks. Beware however
+ though that browsers consider Divs elements within columns to be
+ unbreakable. This means that the code below won't work, for instance:
+
+```markdown
+::::: columns
+
+::: {.only-in-format .html}
+
+First paragraph (...)
+
+Second paragraph (...)
+
+Third paragraph (...)
+
+:::
+
+:::::
+```
+
+Because the three paragraphs are placed within a Div (of classes
+`only-in-format` and `html`), browser break them over multiple
+columns. 
+
+If you face this issue your solutions are to put move the `columns`
+Div *within* the offending one:
+
+```markdown
+::: {.only-in-format .html}
+
+::::: columns
+
+First paragraph (...)
+
+Second paragraph (...)
+
+Third paragraph (...)
+
+:::::
+
+:::
+```
+
+Or to give up fluid columns and place column breaks yourself:
+
+
+```markdown
+::::: columns
+
+::: {.only-in-format .html}
+
+First paragraph (...)
+
+:::
+
+::: {.only-in-format .html}
+
+Second paragraph (...)
+
+:::
+
+::: {.only-in-format .html}
+
+Third paragraph (...)
+
+:::
+
+:::::
+```
+
+Sometimes neither solution is convenient. That is so with Pandoc's
+citeproc bibliographies. 
+
+
+### Combined with citeproc bibliography
+
+In LaTeX output, a bibliography can be placed within columns like so:
+
+```markdown
+# References
+
+::::: twocolumns
+
+::: {#refs}
+
+:::
+
+:::::
+```
+
+This assumes that you're letting Pandoc's internal bibliography
+engine (Citeproc) generate the bibliography, not natbib or
+biblatex.
+
+In HTML, however, the code above doesn't work. That's because
+Citeproc places the bibliography in a Div, which HTML fluid
+columns engine treats as unbreakable. There is no easy way around
+this. You'd need a custom writer to modify Pandoc's HTML output, 
+or perhaps some advanced CSS wizardry.
 
 Advanced usage
 --------------
